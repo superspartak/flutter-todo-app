@@ -1,46 +1,67 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_todo_app/category/category.dart';
+import 'package:flutter_todo_app/category/category_tile.dart';
 
-class HomeScreen extends StatefulWidget {
-  const HomeScreen({Key? key, required this.title}) : super(key: key);
+class MainScreen extends StatefulWidget {
+  const MainScreen({Key? key, required this.categories}) : super(key: key);
 
-  final String title;
+  final List<Category> categories;
 
   @override
-  State<HomeScreen> createState() => _HomeScreenState();
+  State<MainScreen> createState() => _MainScreenState();
 }
 
-class _HomeScreenState extends State<HomeScreen> {
-  int _counter = 0;
+class _MainScreenState extends State<MainScreen> {
+  List<Category> categories = [];
 
-  void _incrementCounter() {
+  @override
+  void initState() {
+    super.initState();
+    categories = widget.categories;
+  }
+
+  void _deleteCategory(int id) {
     setState(() {
-      _counter++;
+      categories = categories.where((element) => element.id != id).toList();
     });
+  }
+
+  List<Widget> _tileBuilder() {
+    List<Widget> tiles = [];
+
+    for (int i = 0; i < categories.length; i++) {
+      tiles.add(CategoryTile(categories[i], _deleteCategory));
+    }
+
+    return tiles;
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text(widget.title),
-      ),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            const Text(
-              'You have pushed the button this many times:',
-            ),
-            Text(
-              '$_counter',
-              style: Theme.of(context).textTheme.headline4,
-            ),
-          ],
-        ),
-      ),
+      body: Padding(
+          padding: const EdgeInsets.symmetric(vertical: 24.0, horizontal: 16.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: <Widget>[
+              const Padding(
+                  padding: EdgeInsets.symmetric(vertical: 16, horizontal: 0),
+                  child: Icon(
+                    Icons.menu_outlined,
+                    size: 32,
+                  )),
+              const Text(
+                'Todos',
+                style: TextStyle(fontSize: 32, fontWeight: FontWeight.bold),
+              ),
+              Expanded(
+                  child: GridView.count(
+                      crossAxisCount: 2, children: _tileBuilder()))
+            ],
+          )),
       floatingActionButton: FloatingActionButton(
-        onPressed: _incrementCounter,
-        tooltip: 'Increment',
+        onPressed: () {},
+        tooltip: 'Add Category',
         child: const Icon(Icons.add),
       ),
     );
