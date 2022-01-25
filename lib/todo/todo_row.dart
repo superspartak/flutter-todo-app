@@ -20,6 +20,12 @@ class _TodoRowState extends State<TodoRow> {
     _isDone = widget.todo.done;
   }
 
+  @override
+  void didUpdateWidget(TodoRow oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    _isDone = widget.todo.done;
+  }
+
   void _toggleDone(done) {
     setState(() {
       _isDone = done;
