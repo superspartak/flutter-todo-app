@@ -13,6 +13,7 @@ class CategoryDialog extends StatefulWidget {
 class _CategoryDialogState extends State<CategoryDialog> {
   Color colorValue = Colors.blueGrey;
   IconData iconValue = Icons.hotel_sharp;
+  bool isError = false;
   TextEditingController categoryNameController = TextEditingController();
 
   @override
@@ -24,7 +25,9 @@ class _CategoryDialogState extends State<CategoryDialog> {
         children: [
           TextField(
             autofocus: true,
-            decoration: const InputDecoration(hintText: 'Ex. Finish homework'),
+            decoration: InputDecoration(
+                hintText: 'Ex. Finish homework',
+                errorText: isError ? "Can't be empty" : null),
             controller: categoryNameController,
           ),
           Row(
@@ -100,12 +103,18 @@ class _CategoryDialogState extends State<CategoryDialog> {
       actions: [
         TextButton(
             onPressed: () {
-              widget.createHandler(Category(
-                  DateTime.now().millisecondsSinceEpoch,
-                  categoryNameController.text,
-                  iconValue,
-                  colorValue, []));
-              Navigator.pop(context);
+              if (categoryNameController.text.isNotEmpty) {
+                widget.createHandler(Category(
+                    DateTime.now().millisecondsSinceEpoch,
+                    categoryNameController.text,
+                    iconValue,
+                    colorValue, []));
+                Navigator.pop(context);
+              } else {
+                setState(() {
+                  isError = true;
+                });
+              }
             },
             child: const Text('Create'))
       ],

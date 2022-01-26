@@ -19,6 +19,7 @@ class TodoScreen extends StatefulWidget {
 class _TodoScreenState extends State<TodoScreen> {
   List<Todo> todos = [];
   final todoDescController = TextEditingController();
+  bool isError = false;
 
   @override
   void initState() {
@@ -82,12 +83,18 @@ class _TodoScreenState extends State<TodoScreen> {
   }
 
   void createTodo() {
-    setState(() {
-      todos.add(Todo(DateTime.now().millisecondsSinceEpoch,
-          todoDescController.text, false));
-      todoDescController.clear();
-      Navigator.pop(context);
-    });
+    if (todoDescController.text.isNotEmpty) {
+      setState(() {
+        todos.add(Todo(DateTime.now().millisecondsSinceEpoch,
+            todoDescController.text, false));
+        todoDescController.clear();
+        Navigator.pop(context);
+      });
+    } else {
+      setState(() {
+        isError = true;
+      });
+    }
   }
 
   void openTodoDialog() {
@@ -97,8 +104,9 @@ class _TodoScreenState extends State<TodoScreen> {
               title: const Text('Enter todo description.'),
               content: TextField(
                 autofocus: true,
-                decoration:
-                    const InputDecoration(hintText: 'Ex. Finish homework'),
+                decoration: InputDecoration(
+                    hintText: 'Ex. Finish homework',
+                    errorText: isError ? "Can't be empty" : null),
                 controller: todoDescController,
               ),
               actions: [
