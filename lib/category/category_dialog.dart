@@ -88,7 +88,7 @@ class _CategoryDialogState extends State<CategoryDialog> {
                       value: value,
                       child: Icon(
                         value,
-                        size: 16,
+                        size: 24,
                         color: Colors.black,
                       ));
                 }).toList(),
