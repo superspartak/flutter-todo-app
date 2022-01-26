@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_todo_app/category/category.dart';
 import 'package:flutter_todo_app/screens/todo_screen.dart';
 
-class CategoryTile extends StatelessWidget {
+class CategoryTile extends StatefulWidget {
   const CategoryTile(this.category, this.deleteHandler, {Key? key})
       : super(key: key);
 
@@ -10,20 +10,26 @@ class CategoryTile extends StatelessWidget {
   final void Function(int) deleteHandler;
 
   @override
+  _CategoryTileState createState() => _CategoryTileState();
+}
+
+class _CategoryTileState extends State<CategoryTile> {
+  @override
   Widget build(BuildContext context) {
     return InkWell(
         onTap: () {
           Navigator.push(
-              context,
-              MaterialPageRoute(
-                  builder: (context) => TodoScreen(
-                      category: category.name, todos: category.todos)));
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) =>
+                          TodoScreen(category: widget.category)))
+              .then((value) => setState(() {}));
         },
         onLongPress: () {
           showDialog(
             context: context,
             builder: (BuildContext context) => AlertDialog(
-              title: Text(category.name),
+              title: Text(widget.category.name),
               content: const Text(
                   'Please choose the action regarding this category.'),
               actions: <Widget>[
@@ -32,8 +38,10 @@ class CategoryTile extends StatelessWidget {
                   child: const Text('Edit'),
                 ),
                 TextButton(
-                  onPressed: () =>
-                      {deleteHandler(category.id), Navigator.pop(context)},
+                  onPressed: () => {
+                    widget.deleteHandler(widget.category.id),
+                    Navigator.pop(context)
+                  },
                   child: const Text(
                     'Delete',
                     style: TextStyle(color: Colors.red),
@@ -55,18 +63,19 @@ class CategoryTile extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Expanded(
-                  child: Icon(category.icon, size: 48, color: category.color),
+                  child: Icon(widget.category.icon,
+                      size: 48, color: widget.category.color),
                 ),
                 Expanded(
                     child: Column(
                         mainAxisAlignment: MainAxisAlignment.end,
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                      Text(category.name,
+                      Text(widget.category.name,
                           style: const TextStyle(
                             fontSize: 24,
                           )),
-                      Text(category.todos.length.toString() + ' Tasks',
+                      Text(widget.category.todos.length.toString() + ' Tasks',
                           style: const TextStyle(
                             fontSize: 12,
                           ))
