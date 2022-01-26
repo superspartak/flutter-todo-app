@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_todo_app/category/category.dart';
+import 'package:flutter_todo_app/commons/emptyList.dart';
 import 'package:flutter_todo_app/todo/todo.dart';
 import 'package:flutter_todo_app/todo/todo_row.dart';
 
@@ -6,11 +8,9 @@ class TodoScreen extends StatefulWidget {
   const TodoScreen({
     Key? key,
     required this.category,
-    required this.todos,
   }) : super(key: key);
 
-  final String category;
-  final List<Todo> todos;
+  final Category category;
 
   @override
   State<TodoScreen> createState() => _TodoScreenState();
@@ -23,7 +23,7 @@ class _TodoScreenState extends State<TodoScreen> {
   @override
   void initState() {
     super.initState();
-    todos = widget.todos;
+    todos = widget.category.todos;
   }
 
   Widget _buildTodos() {
@@ -63,11 +63,14 @@ class _TodoScreenState extends State<TodoScreen> {
                     },
                   )),
               Text(
-                widget.category,
+                widget.category.name,
                 style:
                     const TextStyle(fontSize: 32, fontWeight: FontWeight.bold),
               ),
-              Expanded(child: _buildTodos())
+              Expanded(
+                  child: todos.isNotEmpty
+                      ? _buildTodos()
+                      : const EmptyList('No todos in this category yet.'))
             ],
           )),
       floatingActionButton: FloatingActionButton(

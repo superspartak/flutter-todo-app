@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_todo_app/category/category.dart';
 import 'package:flutter_todo_app/category/category_dialog.dart';
 import 'package:flutter_todo_app/category/category_tile.dart';
+import 'package:flutter_todo_app/commons/emptyList.dart';
 
 class MainScreen extends StatefulWidget {
   const MainScreen({Key? key, required this.categories}) : super(key: key);
@@ -62,8 +63,11 @@ class _MainScreenState extends State<MainScreen> {
                 style: TextStyle(fontSize: 32, fontWeight: FontWeight.bold),
               ),
               Expanded(
-                  child: GridView.count(
-                      crossAxisCount: 2, children: _tileBuilder()))
+                  child: categories.isNotEmpty
+                      ? GridView.count(
+                          crossAxisCount: 2, children: _tileBuilder())
+                      : const EmptyList(
+                          'Please create a category to add todos'))
             ],
           )),
       floatingActionButton: FloatingActionButton(
