@@ -101,7 +101,7 @@ class _CategoryDialogState extends State<CategoryDialog> {
         TextButton(
             onPressed: () {
               widget.createHandler(Category(
-                  DateTime.now().microsecondsSinceEpoch,
+                  DateTime.now().millisecondsSinceEpoch,
                   categoryNameController.text,
                   iconValue,
                   colorValue, []));

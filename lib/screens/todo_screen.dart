@@ -83,7 +83,8 @@ class _TodoScreenState extends State<TodoScreen> {
 
   void createTodo() {
     setState(() {
-      todos.add(Todo(12, todoDescController.text, false));
+      todos.add(Todo(DateTime.now().millisecondsSinceEpoch,
+          todoDescController.text, false));
       todoDescController.clear();
       Navigator.pop(context);
     });
