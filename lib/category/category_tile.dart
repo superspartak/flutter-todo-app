@@ -19,6 +19,30 @@ class CategoryTile extends StatelessWidget {
                   builder: (context) => TodoScreen(
                       category: category.name, todos: category.todos)));
         },
+        onLongPress: () {
+          showDialog(
+            context: context,
+            builder: (BuildContext context) => AlertDialog(
+              title: Text(category.name),
+              content: const Text(
+                  'Please choose the action regarding this category.'),
+              actions: <Widget>[
+                TextButton(
+                  onPressed: () => {},
+                  child: const Text('Edit'),
+                ),
+                TextButton(
+                  onPressed: () =>
+                      {deleteHandler(category.id), Navigator.pop(context)},
+                  child: const Text(
+                    'Delete',
+                    style: TextStyle(color: Colors.red),
+                  ),
+                ),
+              ],
+            ),
+          );
+        },
         child: Container(
           height: 144,
           width: 144,
