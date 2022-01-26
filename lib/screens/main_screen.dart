@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_todo_app/category/category.dart';
+import 'package:flutter_todo_app/category/category_dialog.dart';
 import 'package:flutter_todo_app/category/category_tile.dart';
 
 class MainScreen extends StatefulWidget {
@@ -23,6 +24,12 @@ class _MainScreenState extends State<MainScreen> {
   void _deleteCategory(int id) {
     setState(() {
       categories = categories.where((element) => element.id != id).toList();
+    });
+  }
+
+  void _addCategory(Category category) {
+    setState(() {
+      categories.add(category);
     });
   }
 
@@ -60,10 +67,15 @@ class _MainScreenState extends State<MainScreen> {
             ],
           )),
       floatingActionButton: FloatingActionButton(
-        onPressed: () {},
+        onPressed: openCreateCategoryDialog,
         tooltip: 'Add Category',
         child: const Icon(Icons.add),
       ),
     );
+  }
+
+  void openCreateCategoryDialog() {
+    showDialog(
+        context: context, builder: (context) => CategoryDialog(_addCategory));
   }
 }
