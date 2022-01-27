@@ -23,8 +23,8 @@ class _CategoryEditDialogState extends State<CategoryEditDialog> {
   void initState() {
     super.initState();
     categoryNameController.text = widget.category.name;
-    iconValue = widget.category.icon;
-    colorValue = widget.category.color;
+    iconValue = icons[0];
+    colorValue = colors[0];
   }
 
   @override
