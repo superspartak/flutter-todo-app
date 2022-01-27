@@ -33,13 +33,34 @@ class _TodoScreenState extends State<TodoScreen> {
         itemBuilder: (context, i) {
           if (i.isOdd) return const Divider();
           final index = i ~/ 2;
-          return TodoRow(todos[index], _deleteTodo);
+          return TodoRow(todos[index], _deleteTodo, _editTodo);
         });
+  }
+
+  void _createTodo() {
+    if (todoDescController.text.isNotEmpty) {
+      setState(() {
+        todos.add(Todo(DateTime.now().millisecondsSinceEpoch,
+            todoDescController.text, false));
+        todoDescController.clear();
+        Navigator.pop(context);
+      });
+    } else {
+      setState(() {
+        isError = true;
+      });
+    }
   }
 
   void _deleteTodo(int id) {
     setState(() {
-      todos = todos.where((element) => element.id != id).toList();
+      todos.removeWhere((element) => element.id == id);
+    });
+  }
+
+  void _editTodo(int id, String desc) {
+    setState(() {
+      todos.firstWhere((element) => element.id == id).desc = desc;
     });
   }
 
@@ -82,21 +103,6 @@ class _TodoScreenState extends State<TodoScreen> {
     );
   }
 
-  void createTodo() {
-    if (todoDescController.text.isNotEmpty) {
-      setState(() {
-        todos.add(Todo(DateTime.now().millisecondsSinceEpoch,
-            todoDescController.text, false));
-        todoDescController.clear();
-        Navigator.pop(context);
-      });
-    } else {
-      setState(() {
-        isError = true;
-      });
-    }
-  }
-
   void openTodoDialog() {
     showDialog(
         context: context,
@@ -110,7 +116,7 @@ class _TodoScreenState extends State<TodoScreen> {
                 controller: todoDescController,
               ),
               actions: [
-                TextButton(onPressed: createTodo, child: const Text('Create'))
+                TextButton(onPressed: _createTodo, child: const Text('Create'))
               ],
             ));
   }

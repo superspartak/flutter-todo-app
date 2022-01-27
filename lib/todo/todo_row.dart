@@ -2,10 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_todo_app/todo/todo.dart';
 
 class TodoRow extends StatefulWidget {
-  const TodoRow(this.todo, this.deleteHandler, {Key? key}) : super(key: key);
+  const TodoRow(this.todo, this.deleteHandler, this.editHandler, {Key? key})
+      : super(key: key);
 
   final Todo todo;
   final void Function(int) deleteHandler;
+  final void Function(int, String) editHandler;
 
   @override
   _TodoRowState createState() => _TodoRowState();
@@ -13,6 +15,8 @@ class TodoRow extends StatefulWidget {
 
 class _TodoRowState extends State<TodoRow> {
   bool _isDone = false;
+  bool isError = false;
+  TextEditingController todoDescController = TextEditingController();
 
   @override
   void initState() {
@@ -44,7 +48,7 @@ class _TodoRowState extends State<TodoRow> {
                 const Text('Please choose the action regarding this todo.'),
             actions: <Widget>[
               TextButton(
-                onPressed: () => {},
+                onPressed: openEditTodoDialog,
                 child: const Text('Edit'),
               ),
               TextButton(
@@ -71,5 +75,39 @@ class _TodoRowState extends State<TodoRow> {
         ),
       ),
     );
+  }
+
+  void openEditTodoDialog() {
+    todoDescController.text = widget.todo.desc;
+    Navigator.pop(context);
+    showDialog(
+        context: context,
+        builder: (context) => AlertDialog(
+              title: const Text('Enter todo description.'),
+              content: TextField(
+                autofocus: true,
+                decoration: InputDecoration(
+                    hintText: 'Ex. Finish homework',
+                    errorText: isError ? "Can't be empty" : null),
+                controller: todoDescController,
+              ),
+              actions: [
+                TextButton(onPressed: onEditPressed, child: const Text('Edit'))
+              ],
+            ));
+  }
+
+  void onEditPressed() {
+    if (todoDescController.text.isNotEmpty) {
+      setState(() {
+        widget.editHandler(widget.todo.id, todoDescController.text);
+        todoDescController.clear();
+        Navigator.pop(context);
+      });
+    } else {
+      setState(() {
+        isError = true;
+      });
+    }
   }
 }
