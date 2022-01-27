@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_todo_app/category/category.dart';
+import 'package:flutter_todo_app/commons/utils.dart';
 
 class CategoryDialog extends StatefulWidget {
   const CategoryDialog(this.createHandler, {Key? key}) : super(key: key);
@@ -45,15 +46,7 @@ class _CategoryDialogState extends State<CategoryDialog> {
                     colorValue = newValue!;
                   });
                 },
-                items: <Color>[
-                  Colors.blueGrey,
-                  Colors.red,
-                  Colors.orange,
-                  Colors.green,
-                  Colors.blue,
-                  Colors.black,
-                  Colors.purple
-                ].map<DropdownMenuItem<Color>>((Color value) {
+                items: colors.map<DropdownMenuItem<Color>>((Color value) {
                   return DropdownMenuItem<Color>(
                     value: value,
                     child: Container(
@@ -78,15 +71,7 @@ class _CategoryDialogState extends State<CategoryDialog> {
                     iconValue = newValue!;
                   });
                 },
-                items: <IconData>[
-                  Icons.hotel_sharp,
-                  Icons.umbrella,
-                  Icons.car_repair,
-                  Icons.balcony_rounded,
-                  Icons.shopping_bag_outlined,
-                  Icons.place_outlined,
-                  Icons.plagiarism_rounded
-                ].map<DropdownMenuItem<IconData>>((IconData value) {
+                items: icons.map<DropdownMenuItem<IconData>>((IconData value) {
                   return DropdownMenuItem<IconData>(
                       value: value,
                       child: Icon(
