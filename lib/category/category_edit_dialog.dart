@@ -112,7 +112,7 @@ class _CategoryEditDialogState extends State<CategoryEditDialog> {
                 });
               }
             },
-            child: const Text('Create'))
+            child: const Text('Update'))
       ],
     );
   }
