@@ -2,39 +2,23 @@ import 'package:flutter/material.dart';
 import 'package:flutter_todo_app/todo/todo.dart';
 
 class TodoRow extends StatefulWidget {
-  const TodoRow(this.todo, this.deleteHandler, this.editHandler, {Key? key})
+  const TodoRow(
+      this.todo, this.deleteHandler, this.editHandler, this.toggleHandler,
+      {Key? key})
       : super(key: key);
 
   final Todo todo;
   final void Function(int) deleteHandler;
   final void Function(int, String) editHandler;
+  final void Function(int) toggleHandler;
 
   @override
   _TodoRowState createState() => _TodoRowState();
 }
 
 class _TodoRowState extends State<TodoRow> {
-  bool _isDone = false;
   bool isError = false;
   TextEditingController todoDescController = TextEditingController();
-
-  @override
-  void initState() {
-    super.initState();
-    _isDone = widget.todo.done;
-  }
-
-  @override
-  void didUpdateWidget(TodoRow oldWidget) {
-    super.didUpdateWidget(oldWidget);
-    _isDone = widget.todo.done;
-  }
-
-  void _toggleDone(done) {
-    setState(() {
-      _isDone = done;
-    });
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -70,8 +54,8 @@ class _TodoRowState extends State<TodoRow> {
           widget.todo.desc,
         ),
         trailing: Checkbox(
-          value: _isDone,
-          onChanged: _toggleDone,
+          value: widget.todo.done,
+          onChanged: (_) => widget.toggleHandler(widget.todo.id),
         ),
       ),
     );

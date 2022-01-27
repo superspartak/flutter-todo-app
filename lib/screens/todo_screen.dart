@@ -33,7 +33,7 @@ class _TodoScreenState extends State<TodoScreen> {
         itemBuilder: (context, i) {
           if (i.isOdd) return const Divider();
           final index = i ~/ 2;
-          return TodoRow(todos[index], _deleteTodo, _editTodo);
+          return TodoRow(todos[index], _deleteTodo, _editTodo, _toggleTodo);
         });
   }
 
@@ -61,6 +61,13 @@ class _TodoScreenState extends State<TodoScreen> {
   void _editTodo(int id, String desc) {
     setState(() {
       todos.firstWhere((element) => element.id == id).desc = desc;
+    });
+  }
+
+  void _toggleTodo(int id) {
+    setState(() {
+      var todo = todos.firstWhere((element) => element.id == id);
+      todo.done = !todo.done;
     });
   }
 
