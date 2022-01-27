@@ -1,13 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_todo_app/category/category.dart';
+import 'package:flutter_todo_app/category/category_edit_dialog.dart';
 import 'package:flutter_todo_app/screens/todo_screen.dart';
 
 class CategoryTile extends StatefulWidget {
-  const CategoryTile(this.category, this.deleteHandler, {Key? key})
+  const CategoryTile(this.category, this.deleteHandler, this.editHandler,
+      {Key? key})
       : super(key: key);
 
   final Category category;
   final void Function(int) deleteHandler;
+  final void Function(int, String, Color, IconData) editHandler;
 
   @override
   _CategoryTileState createState() => _CategoryTileState();
@@ -34,7 +37,7 @@ class _CategoryTileState extends State<CategoryTile> {
                   'Please choose the action regarding this category.'),
               actions: <Widget>[
                 TextButton(
-                  onPressed: () => {},
+                  onPressed: openEditCategoryDialog,
                   child: const Text('Edit'),
                 ),
                 TextButton(
@@ -84,5 +87,13 @@ class _CategoryTileState extends State<CategoryTile> {
             ),
           ),
         ));
+  }
+
+  void openEditCategoryDialog() {
+    Navigator.pop(context);
+    showDialog(
+        context: context,
+        builder: (context) =>
+            CategoryEditDialog(widget.category, widget.editHandler));
   }
 }

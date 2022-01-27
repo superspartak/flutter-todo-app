@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart' as foundation;
 import 'package:flutter/material.dart';
 import 'package:flutter_todo_app/category/category.dart';
 import 'package:flutter_todo_app/category/category_dialog.dart';
@@ -34,11 +35,21 @@ class _MainScreenState extends State<MainScreen> {
     });
   }
 
+  void _editCategory(int id, String name, Color color, IconData icon) {
+    setState(() {
+      var updatedCategory =
+          categories.firstWhere((element) => element.id == id);
+      updatedCategory.name = name;
+      updatedCategory.color = color;
+      updatedCategory.icon = icon;
+    });
+  }
+
   List<Widget> _tileBuilder() {
     List<Widget> tiles = [];
 
     for (int i = 0; i < categories.length; i++) {
-      tiles.add(CategoryTile(categories[i], _deleteCategory));
+      tiles.add(CategoryTile(categories[i], _deleteCategory, _editCategory));
     }
 
     return tiles;
@@ -65,7 +76,8 @@ class _MainScreenState extends State<MainScreen> {
               Expanded(
                   child: categories.isNotEmpty
                       ? GridView.count(
-                          crossAxisCount: 2, children: _tileBuilder())
+                          crossAxisCount: foundation.kIsWeb ? 5 : 2,
+                          children: _tileBuilder())
                       : const EmptyList(
                           'Please create a category to add todos'))
             ],
