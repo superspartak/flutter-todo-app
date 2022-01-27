@@ -43,6 +43,7 @@ class _TodoScreenState extends State<TodoScreen> {
         todos.add(Todo(DateTime.now().millisecondsSinceEpoch,
             todoDescController.text, false));
         todoDescController.clear();
+        Category.saveToStorage(widget.category);
         Navigator.pop(context);
       });
     } else {
@@ -55,12 +56,14 @@ class _TodoScreenState extends State<TodoScreen> {
   void _deleteTodo(int id) {
     setState(() {
       todos.removeWhere((element) => element.id == id);
+      Category.saveToStorage(widget.category);
     });
   }
 
   void _editTodo(int id, String desc) {
     setState(() {
       todos.firstWhere((element) => element.id == id).desc = desc;
+      Category.saveToStorage(widget.category);
     });
   }
 
@@ -68,6 +71,7 @@ class _TodoScreenState extends State<TodoScreen> {
     setState(() {
       var todo = todos.firstWhere((element) => element.id == id);
       todo.done = !todo.done;
+      Category.saveToStorage(widget.category);
     });
   }
 

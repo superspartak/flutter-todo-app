@@ -6,9 +6,7 @@ import 'package:flutter_todo_app/category/category_tile.dart';
 import 'package:flutter_todo_app/commons/emptyList.dart';
 
 class MainScreen extends StatefulWidget {
-  const MainScreen({Key? key, required this.categories}) : super(key: key);
-
-  final List<Category> categories;
+  const MainScreen({Key? key}) : super(key: key);
 
   @override
   State<MainScreen> createState() => _MainScreenState();
@@ -18,20 +16,29 @@ class _MainScreenState extends State<MainScreen> {
   List<Category> categories = [];
 
   @override
-  void initState() {
+  initState() {
     super.initState();
-    categories = widget.categories;
+    getCategories();
+  }
+
+  Future<void> getCategories() async {
+    Category.getFromStorage().then((value) {
+      categories = value;
+      setState(() {});
+    });
   }
 
   void _deleteCategory(int id) {
     setState(() {
       categories = categories.where((element) => element.id != id).toList();
+      Category.removeFromStorage(id);
     });
   }
 
   void _addCategory(Category category) {
     setState(() {
       categories.add(category);
+      Category.saveToStorage(category);
     });
   }
 
@@ -42,6 +49,7 @@ class _MainScreenState extends State<MainScreen> {
       updatedCategory.name = name;
       updatedCategory.color = color;
       updatedCategory.icon = icon;
+      Category.saveToStorage(updatedCategory);
     });
   }
 
