@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_todo_app/category/category.dart';
+import 'package:flutter_todo_app/category/category_service.dart';
 import 'package:flutter_todo_app/commons/emptyList.dart';
 import 'package:flutter_todo_app/todo/todo.dart';
+import 'package:flutter_todo_app/todo/todo_dialog.dart';
 import 'package:flutter_todo_app/todo/todo_row.dart';
 
 class TodoScreen extends StatefulWidget {
@@ -18,8 +20,6 @@ class TodoScreen extends StatefulWidget {
 
 class _TodoScreenState extends State<TodoScreen> {
   List<Todo> todos = [];
-  final todoDescController = TextEditingController();
-  bool isError = false;
 
   @override
   void initState() {
@@ -37,33 +37,25 @@ class _TodoScreenState extends State<TodoScreen> {
         });
   }
 
-  void _createTodo() {
-    if (todoDescController.text.isNotEmpty) {
-      setState(() {
-        todos.add(Todo(DateTime.now().millisecondsSinceEpoch,
-            todoDescController.text, false));
-        todoDescController.clear();
-        Category.saveToStorage(widget.category);
-        Navigator.pop(context);
-      });
-    } else {
-      setState(() {
-        isError = true;
-      });
-    }
+  void _createTodo(String desc) {
+    setState(() {
+      todos.add(Todo(DateTime.now().millisecondsSinceEpoch, desc, false));
+      CategoryService().saveToStorage(widget.category);
+      Navigator.pop(context);
+    });
   }
 
   void _deleteTodo(int id) {
     setState(() {
       todos.removeWhere((element) => element.id == id);
-      Category.saveToStorage(widget.category);
+      CategoryService().saveToStorage(widget.category);
     });
   }
 
   void _editTodo(int id, String desc) {
     setState(() {
       todos.firstWhere((element) => element.id == id).desc = desc;
-      Category.saveToStorage(widget.category);
+      CategoryService().saveToStorage(widget.category);
     });
   }
 
@@ -71,7 +63,7 @@ class _TodoScreenState extends State<TodoScreen> {
     setState(() {
       var todo = todos.firstWhere((element) => element.id == id);
       todo.done = !todo.done;
-      Category.saveToStorage(widget.category);
+      CategoryService().saveToStorage(widget.category);
     });
   }
 
@@ -110,25 +102,11 @@ class _TodoScreenState extends State<TodoScreen> {
         onPressed: openTodoDialog,
         tooltip: 'Increment',
         child: const Icon(Icons.add),
-      ), // This trailing comma makes auto-formatting nicer for build methods.
+      ),
     );
   }
 
   void openTodoDialog() {
-    showDialog(
-        context: context,
-        builder: (context) => AlertDialog(
-              title: const Text('Enter todo description.'),
-              content: TextField(
-                autofocus: true,
-                decoration: InputDecoration(
-                    hintText: 'Ex. Finish homework',
-                    errorText: isError ? "Can't be empty" : null),
-                controller: todoDescController,
-              ),
-              actions: [
-                TextButton(onPressed: _createTodo, child: const Text('Create'))
-              ],
-            ));
+    showDialog(context: context, builder: (context) => TodoDialog(_createTodo));
   }
 }
