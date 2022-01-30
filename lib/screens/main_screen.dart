@@ -2,6 +2,7 @@ import 'package:flutter/foundation.dart' as foundation;
 import 'package:flutter/material.dart';
 import 'package:flutter_todo_app/category/category.dart';
 import 'package:flutter_todo_app/category/category_dialog.dart';
+import 'package:flutter_todo_app/category/category_service.dart';
 import 'package:flutter_todo_app/category/category_tile.dart';
 import 'package:flutter_todo_app/commons/emptyList.dart';
 
@@ -22,7 +23,7 @@ class _MainScreenState extends State<MainScreen> {
   }
 
   Future<void> getCategories() async {
-    Category.getFromStorage().then((value) {
+    CategoryService().getFromStorage().then((value) {
       categories = value;
       setState(() {});
     });
@@ -31,14 +32,14 @@ class _MainScreenState extends State<MainScreen> {
   void _deleteCategory(int id) {
     setState(() {
       categories = categories.where((element) => element.id != id).toList();
-      Category.removeFromStorage(id);
+      CategoryService().removeFromStorage(id);
     });
   }
 
   void _addCategory(Category category) {
     setState(() {
       categories.add(category);
-      Category.saveToStorage(category);
+      CategoryService().saveToStorage(category);
     });
   }
 
@@ -49,7 +50,7 @@ class _MainScreenState extends State<MainScreen> {
       updatedCategory.name = name;
       updatedCategory.color = color;
       updatedCategory.icon = icon;
-      Category.saveToStorage(updatedCategory);
+      CategoryService().saveToStorage(updatedCategory);
     });
   }
 
