@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_todo_app/todo/todo.dart';
+import 'package:flutter_todo_app/todo/todo_edit_dialog.dart';
 
 class TodoRow extends StatefulWidget {
   const TodoRow(
@@ -62,36 +63,9 @@ class _TodoRowState extends State<TodoRow> {
   }
 
   void openEditTodoDialog() {
-    todoDescController.text = widget.todo.desc;
     Navigator.pop(context);
     showDialog(
         context: context,
-        builder: (context) => AlertDialog(
-              title: const Text('Enter todo description.'),
-              content: TextField(
-                autofocus: true,
-                decoration: InputDecoration(
-                    hintText: 'Ex. Finish homework',
-                    errorText: isError ? "Can't be empty" : null),
-                controller: todoDescController,
-              ),
-              actions: [
-                TextButton(onPressed: onEditPressed, child: const Text('Edit'))
-              ],
-            ));
-  }
-
-  void onEditPressed() {
-    if (todoDescController.text.isNotEmpty) {
-      setState(() {
-        widget.editHandler(widget.todo.id, todoDescController.text);
-        todoDescController.clear();
-        Navigator.pop(context);
-      });
-    } else {
-      setState(() {
-        isError = true;
-      });
-    }
+        builder: (context) => TodoEditDialog(widget.todo, widget.editHandler));
   }
 }

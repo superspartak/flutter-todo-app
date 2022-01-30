@@ -56,6 +56,7 @@ class _TodoScreenState extends State<TodoScreen> {
     setState(() {
       todos.firstWhere((element) => element.id == id).desc = desc;
       CategoryService().saveToStorage(widget.category);
+      Navigator.pop(context);
     });
   }
 
